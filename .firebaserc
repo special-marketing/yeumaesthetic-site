@@ -1,0 +1,12 @@
+{
+  "projects": {
+    "default": "sp-esthetic-main"
+  },
+  "targets": {
+    "sp-esthetic-main": {
+      "hosting": {
+        "yeumaesthetic": ["yeumaesthetic"]
+      }
+    }
+  }
+}

@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>예약 전 확인</title>
+
+  <style>
+    :root{
+      --bg:#0b0d12;
+      --card:#121622;
+      --text:#ffffff;
+      --muted:rgba(255,255,255,.72);
+      --stroke:rgba(255,255,255,.12);
+      --btn:#00c73c;
+      --btnText:#ffffff;
+      --btnDisabled:rgba(255,255,255,.16);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap{
+      min-height: 100dvh;
+      padding: 20px 16px 24px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .card{
+      width:100%;
+      max-width: 420px;
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.35);
+    }
+    h1{
+      font-size: 18px;
+      margin: 0 0 8px;
+      letter-spacing: -.2px;
+    }
+    p{
+      margin:0 0 16px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .options{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin: 12px 0 16px;
+    }
+    .opt{
+      border:1px solid var(--stroke);
+      border-radius: 14px;
+      padding: 12px 12px;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      cursor:pointer;
+      user-select:none;
+      background: rgba(255,255,255,.02);
+    }
+    .opt input{ margin-top:2px; }
+    .opt strong{
+      display:block;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    .opt span{
+      display:block;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+    .divider{
+      height:1px;
+      background: var(--stroke);
+      margin: 14px 0;
+    }
+    .cta{
+      width:100%;
+      border:none;
+      border-radius: 14px;
+      padding: 14px 14px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor:pointer;
+      background: var(--btn);
+      color: var(--btnText);
+    }
+    .cta:disabled{
+      background: var(--btnDisabled);
+      color: rgba(255,255,255,.55);
+      cursor:not-allowed;
+      font-weight: 700;
+    }
+    .small{
+      margin-top:10px;
+      font-size:11px;
+      color: rgba(255,255,255,.55);
+      line-height:1.45;
+    }
+  </style>
+  
+	<!-- Meta Pixel Code -->
+	<script>
+	!function(f,b,e,v,n,t,s)
+	{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+	n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+	if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+	n.queue=[];t=b.createElement(e);t.async=!0;
+	t.src=v;s=b.getElementsByTagName(e)[0];
+	s.parentNode.insertBefore(t,s)}(window, document,'script',
+	'https://connect.facebook.net/en_US/fbevents.js');
+	fbq('init', '1222858113356894');
+	fbq('track', 'PageView');
+	</script>
+	<noscript><img height="1" width="1" style="display:none"
+	src="https://www.facebook.com/tr?id=1222858113356894&ev=PageView&noscript=1"
+	/></noscript>
+	<!-- End Meta Pixel Code -->
+  
+  
+  
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>어느 시간대가 가장 방문하기 편하신가요?</h1>
+      <p>선택하신 내용에 맞춰 예약 페이지로 바로 이동합니다.</p>
+
+      <form id="qForm" class="options">
+        <label class="opt">
+          <input type="radio" name="area" value="오전" />
+          <div>
+            <strong>오전</strong>
+            <span></span>
+          </div>
+        </label>
+
+        <label class="opt">
+          <input type="radio" name="area" value="오후" />
+          <div>
+            <strong>오후</strong>
+            <span></span>
+          </div>
+        </label>
+
+        <label class="opt">
+          <input type="radio" name="area" value="저녁" />
+          <div>
+            <strong>저녁</strong>
+            <span></span>
+          </div>
+        </label>
+
+      </form>
+
+      <div class="divider"></div>
+
+      <button id="goNaver" class="cta" disabled>네이버로 예약하러 가기 (2/3)</button>
+      <div class="small">
+        * 선택값은 예약 최적화 이벤트에만 사용됩니다.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 1) 네이버 예약 URL (여기만 바꾸세요)
+    const NAVER_URL = "./backlanding1-end.html"; // <-- 실제 네이버 예약 링크로 교체
+
+    // 2) 쿼리스트링(utm, fbclid 등) 유지: 1페이지에서 넘어온 파라미터를 네이버로도 붙이고 싶으면 true
+    const PASS_QUERY_TO_NAVER = false;
+
+    const form = document.getElementById('qForm');
+    const btn = document.getElementById('goNaver');
+
+    function getSelectedArea(){
+      const checked = form.querySelector('input[name="area"]:checked');
+      return checked ? checked.value : null;
+    }
+
+    form.addEventListener('change', () => {
+      btn.disabled = !getSelectedArea();
+    });
+
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const area = getSelectedArea();
+      if (!area) return;
+
+      // 3) Meta Pixel 이벤트 전송 (최적화 이벤트)
+      if (typeof fbq === 'function') {
+        fbq('trackCustom', '2st_BookClick', {
+          area: area,
+          step: "2"
+        });
+      }
+
+      // 4) 네이버로 이동
+      let target = NAVER_URL;
+      if (PASS_QUERY_TO_NAVER && location.search) {
+        target += (NAVER_URL.includes('?') ? '&' : '?') + location.search.replace(/^\?/, '');
+      }
+      window.location.href = target;
+    });
+  </script>
+</body>
+</html>

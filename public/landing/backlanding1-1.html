@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>예약 전 확인</title>
+  <style>
+    :root{
+      --bg:#0b0d12;
+      --card:#121622;
+      --text:#ffffff;
+      --muted:rgba(255,255,255,.72);
+      --stroke:rgba(255,255,255,.12);
+      --btn:#00c73c;
+      --btnText:#ffffff;
+      --btnDisabled:rgba(255,255,255,.16);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap{
+      min-height: 100dvh;
+      padding: 20px 16px 24px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .card{
+      width:100%;
+      max-width: 420px;
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.35);
+    }
+    h1{
+      font-size: 18px;
+      margin: 0 0 8px;
+      letter-spacing: -.2px;
+    }
+    p{
+      margin:0 0 16px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .options{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin: 12px 0 16px;
+    }
+    .opt{
+      border:1px solid var(--stroke);
+      border-radius: 14px;
+      padding: 12px 12px;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      cursor:pointer;
+      user-select:none;
+      background: rgba(255,255,255,.02);
+    }
+    .opt input{ margin-top:2px; }
+    .opt strong{
+      display:block;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    .opt span{
+      display:block;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+    .divider{
+      height:1px;
+      background: var(--stroke);
+      margin: 14px 0;
+    }
+    .cta{
+      width:100%;
+      border:none;
+      border-radius: 14px;
+      padding: 14px 14px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor:pointer;
+      background: var(--btn);
+      color: var(--btnText);
+    }
+    .cta:disabled{
+      background: var(--btnDisabled);
+      color: rgba(255,255,255,.55);
+      cursor:not-allowed;
+      font-weight: 700;
+    }
+    .small{
+      margin-top:10px;
+      font-size:11px;
+      color: rgba(255,255,255,.55);
+      line-height:1.45;
+    }
+    /* 그 외 지역 입력창 */
+    .other-wrap{
+      display:none;
+      margin-top: 6px;
+      padding-left: 26px;
+    }
+    .other-wrap.open{ display:block; }
+    .other-input{
+      width:100%;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: #fff;
+      outline: none;
+      font-family: inherit;
+      transition: border-color .15s;
+    }
+    .other-input:focus{ border-color: rgba(255,255,255,.5); }
+    .other-input::placeholder{ color: rgba(255,255,255,.35); }
+  </style>
+
+	<!-- Meta Pixel Code -->
+	<script>
+	!function(f,b,e,v,n,t,s)
+	{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+	n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+	if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+	n.queue=[];t=b.createElement(e);t.async=!0;
+	t.src=v;s=b.getElementsByTagName(e)[0];
+	s.parentNode.insertBefore(t,s)}(window, document,'script',
+	'https://connect.facebook.net/en_US/fbevents.js');
+	fbq('init', '1222858113356894');
+	fbq('track', 'PageView');
+	</script>
+	<noscript><img height="1" width="1" style="display:none"
+	src="https://www.facebook.com/tr?id=1222858113356894&ev=PageView&noscript=1"
+	/></noscript>
+	<!-- End Meta Pixel Code -->
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>지금 거주하시는 지역이 어디신가요?</h1>
+      <p>선택하신 내용에 맞춰 예약 페이지로 바로 이동합니다.</p>
+
+      <form id="qForm" class="options">
+        <label class="opt">
+          <input type="radio" name="area" value="김포" id="r-suwon" />
+          <div>
+            <strong>김포</strong>
+            <span></span>
+          </div>
+        </label>
+
+        <label class="opt">
+          <input type="radio" name="area" value="그외지역" id="r-other" />
+          <div>
+            <strong>그 외 지역</strong>
+            <span></span>
+          </div>
+        </label>
+      </form>
+
+      <!-- 그 외 지역 입력창 (form 밖, 시각적으로 자연스럽게) -->
+      <div class="other-wrap" id="other-wrap">
+        <input
+          class="other-input"
+          id="other-text"
+          type="text"
+          placeholder="예) 검단, 일산, 인천 …"
+          maxlength="40"
+        />
+      </div>
+
+      <div class="divider"></div>
+      <button id="goNaver" class="cta" disabled>특별이벤트 예약하러 가기 (1/6)</button>
+      <div class="small">
+        * 선택값은 예약 최적화 이벤트에만 사용됩니다.
+      </div>
+    </div>
+  </div>
+
+<script type="module">
+  import { db } from "../firebase-init.js";
+  import { doc, setDoc, updateDoc, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+  const NEXT_URL           = "./backlanding1-2.html";
+  const STEP_NUM           = 1;
+  const ANSWER_KEY         = "q1_area";
+  const PIXEL_EVENT        = "1st_BookClick";
+  const PASS_QUERY_TO_NEXT = false;
+
+  const form      = document.getElementById("qForm");
+  const btn       = document.getElementById("goNaver");
+  const rOther    = document.getElementById("r-other");
+  const otherWrap = document.getElementById("other-wrap");
+  const otherText = document.getElementById("other-text");
+
+  function getAnswer(){
+    const checked = form.querySelector('input[name="area"]:checked');
+    if (!checked) return null;
+    if (checked.id === "r-other"){
+      const v = otherText.value.trim();
+      return v.length > 0 ? v : null;
+    }
+    return checked.value;
+  }
+
+  function syncBtn(){ btn.disabled = !getAnswer(); }
+
+  form.addEventListener("change", () => {
+    if (rOther.checked){
+      otherWrap.classList.add("open");
+      otherText.focus();
+    } else {
+      otherWrap.classList.remove("open");
+      otherText.value = "";
+    }
+    syncBtn();
+  });
+
+  otherText.addEventListener("input", syncBtn);
+
+  function getOrCreateSid(){
+    const TTL_MS = 30 * 60 * 1000;
+    const now = Date.now();
+    const p = new URLSearchParams(location.search);
+    const sidParam = p.get("sid");
+    const savedSid = localStorage.getItem("bookSid");
+    const savedAt  = Number(localStorage.getItem("bookSidAt") || 0);
+    const fresh    = !!(savedSid && savedAt && (now - savedAt) < TTL_MS);
+    if (sidParam && sidParam === savedSid && fresh){
+      localStorage.setItem("bookSidAt", String(now));
+      return savedSid;
+    }
+    if (fresh && savedSid){
+      localStorage.setItem("bookSidAt", String(now));
+      return savedSid;
+    }
+    const sid = (crypto.randomUUID ? crypto.randomUUID() : String(now) + Math.random().toString(16).slice(2));
+    localStorage.setItem("bookSid", sid);
+    localStorage.setItem("bookSidAt", String(now));
+    return sid;
+  }
+
+  function buildNextUrl(url, sid){
+    const u = new URL(url, location.href);
+    u.searchParams.set("sid", sid);
+    if (PASS_QUERY_TO_NEXT && location.search){
+      const cur = new URLSearchParams(location.search);
+      for (const [k,v] of cur.entries()){
+        if (k === "sid") continue;
+        if (!u.searchParams.has(k)) u.searchParams.set(k, v);
+      }
+    }
+    return u.toString();
+  }
+
+  async function upsertAnswer(sid, key, value){
+    const COL = location.hostname.replace(/[^a-zA-Z0-9_-]/g, "_");
+    const ref = doc(db, COL, sid);
+    const updatePayload = {
+      sid,
+      step: STEP_NUM,
+      updatedAt: serverTimestamp(),
+      [`answers.${key}`]: value,
+    };
+    try {
+      await updateDoc(ref, updatePayload);
+    } catch(e){
+      await setDoc(ref, {
+        sid,
+        startedAt: serverTimestamp(),
+        step: STEP_NUM,
+        updatedAt: serverTimestamp(),
+        answers: { [key]: value },
+      }, { merge: true });
+    }
+  }
+
+  btn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    const answer = getAnswer();
+    if (!answer) return;
+    const sid = getOrCreateSid();
+    if (typeof fbq === "function"){
+      fbq("trackCustom", PIXEL_EVENT, { area: answer, step: String(STEP_NUM), sid });
+    }
+    try {
+      await upsertAnswer(sid, ANSWER_KEY, answer);
+    } catch(err){
+      console.error("Firestore save failed:", err);
+    }
+    window.location.href = buildNextUrl(NEXT_URL, sid);
+  });
+</script>
+</body>
+</html>

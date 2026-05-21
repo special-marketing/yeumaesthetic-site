@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Landing Page</title>
+    <style>
+        /* Reset & Base */
+        body, html { margin: 0; padding: 0; width: 100%; -webkit-text-size-adjust: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: #fff; }
+        
+        /* Images */
+        .img-container { width: 100%; font-size: 0; line-height: 0; }
+        img { display: block; width: 100%; height: auto; border: 0; }
+
+        /* Spacer for Sticky Button */
+        .bottom-spacer { height: 80px; width: 100%; }
+
+        /* Sticky Button */
+        .sticky-cta {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: #fff;
+            padding-bottom: env(safe-area-inset-bottom);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        
+		.cta-btn {
+			/* 기본 배치 및 고정 */
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 100%;
+			
+			/* 아이폰 노치(홈바) 대응 및 높이 설정 */
+			min-height: calc(64px + env(safe-area-inset-bottom));
+			padding-bottom: env(safe-area-inset-bottom);
+			
+			/* 디자인: 네이버 그린 그라데이션 및 입체감 */
+			background: linear-gradient(to right, #00c73c, #00b035);
+			color: #ffffff;
+			font-size: 20px; /* 시인성을 위해 조금 더 키움 */
+			font-weight: 800; /* 초강력 볼드 */
+			text-decoration: none;
+			border: none;
+			cursor: pointer;
+			z-index: 10000;
+			
+			/* 주목도를 높이는 그림자 효과 */
+			box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
+			
+			/* 터치 피드백 및 애니메이션 */
+			transition: all 0.2s ease;
+			animation: pulse 2s infinite; /* 시선을 끄는 부드러운 박동 효과 */
+		}
+
+		/* 눌렀을 때 반응 (모바일 터치 시) */
+		.cta-btn:active {
+			background: #009b2e;
+			transform: scale(0.98); /* 살짝 눌리는 느낌 */
+		}
+
+		/* 버튼이 미세하게 커졌다 작아졌다 하며 시선을 끄는 애니메이션 */
+		@keyframes pulse {
+			0% { transform: scale(1); }
+			50% { transform: scale(1.02); }
+			100% { transform: scale(1); }
+		}
+
+        /* Optimization: swap font display */
+        @font-face { font-family: 'System'; src: local('sans-serif'); font-display: swap; }
+    </style>
+	
+	<!-- Meta Pixel Code -->
+	<script>
+	!function(f,b,e,v,n,t,s)
+	{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+	n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+	if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+	n.queue=[];t=b.createElement(e);t.async=!0;
+	t.src=v;s=b.getElementsByTagName(e)[0];
+	s.parentNode.insertBefore(t,s)}(window, document,'script',
+	'https://connect.facebook.net/en_US/fbevents.js');
+	fbq('init', '1222858113356894');
+	fbq('track', 'PageView');
+	fbq('trackCustom', 'LandingView');
+	</script>
+	<noscript><img height="1" width="1" style="display:none"
+	src="https://www.facebook.com/tr?id=1222858113356894&ev=PageView&noscript=1"
+	/></noscript>
+	<!-- End Meta Pixel Code -->
+	
+</head>
+<body>
+
+    <div class="img-container">
+        <!-- Eager load first image for LCP -->
+        <img src="./images/back_landing1_01.webp" alt="Content 1" width="750" height="1000">
+        
+        <!-- Lazy load rest -->
+        <img src="./images/back_landing1_02.webp" alt="Content 2" loading="lazy" decoding="async">
+        <img src="./images/back_landing1_03.webp" alt="Content 3" loading="lazy" decoding="async">
+        <img src="./images/back_landing1_04.webp" alt="Content 4" loading="lazy" decoding="async">
+        <img src="./images/back_landing1_05.webp" alt="Content 5" loading="lazy" decoding="async">
+        <img src="./images/back_landing1_06.webp" alt="Content 6" loading="lazy" decoding="async">
+        <img src="./images/back_landing1_07.webp" alt="Content 7" loading="lazy" decoding="async">
+        <img src="./images/back_landing1_08.webp" alt="Content 8" loading="lazy" decoding="async">
+        <img src="./images/back_landing1_09.webp" alt="Content 9" loading="lazy" decoding="async">
+        <img src="./images/back_landing1_10.webp" alt="Content 10" loading="lazy" decoding="async">
+        <img src="./images/back_landing1_11.webp" alt="Content 11" loading="lazy" decoding="async">
+        <img src="./images/back_landing1_12.webp" alt="Content 12" loading="lazy" decoding="async">
+        <img src="./images/back_landing1_13.webp" alt="Content 13" loading="lazy" decoding="async">
+        <img src="./images/back_landing1_14.webp" alt="Content 14" loading="lazy" decoding="async">
+		<img src="./images/back_landing1_15.webp" alt="Content 15" loading="lazy" decoding="async">
+        <img src="./images/back_landing1_16.webp" alt="Content 16" loading="lazy" decoding="async">
+        <img src="./images/back_landing1_17.webp" alt="Content 17" loading="lazy" decoding="async">
+    </div>
+
+    <!-- Spacer to treat button overlay -->
+    <div class="bottom-spacer"></div>
+
+    <div class="sticky-cta">
+        <a href="./backlanding1-1.html" class="cta-btn" id="schedule-button">1만원 특별이벤트 예약 시작하기</a>
+    </div>
+
+	<script>
+    document.getElementById('schedule-button').addEventListener('click', function() {
+        fbq('track', 'Schedule', {
+            value: 10000, // 예약 1건의 평균 가치를 숫자로 입력 (예: 30,000원)
+            currency: 'KRW' // 대한민국 원화 표준 코드
+        });
+		
+		/* TEMP: 추후 삭제 예정 */
+		fbq('trackCustom', 'PreQual_BookClick', {
+			value: 10000,
+			currency: 'KRW'
+		});
+			
+    });
+    </script>
+</body>
+</html>

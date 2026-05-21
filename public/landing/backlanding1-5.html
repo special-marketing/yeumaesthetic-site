@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>예약 전 확인</title>
+
+  <style>
+    :root{
+      --bg:#0b0d12;
+      --card:#121622;
+      --text:#ffffff;
+      --muted:rgba(255,255,255,.72);
+      --stroke:rgba(255,255,255,.12);
+      --btn:#00c73c;
+      --btnText:#ffffff;
+      --btnDisabled:rgba(255,255,255,.16);
+      --danger:#ff5a5a;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap{
+      min-height: 100dvh;
+      padding: 20px 16px 24px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .card{
+      width:100%;
+      max-width: 420px;
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.35);
+    }
+    h1{
+      font-size: 18px;
+      margin: 0 0 8px;
+      letter-spacing: -.2px;
+    }
+    p{
+      margin:0 0 16px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .options{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin: 12px 0 8px;
+    }
+    .opt{
+      border:1px solid var(--stroke);
+      border-radius: 14px;
+      padding: 12px 12px;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      user-select:none;
+      background: rgba(255,255,255,.02);
+    }
+    .opt strong{
+      display:block;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    .opt span{
+      display:block;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+    .divider{
+      height:1px;
+      background: var(--stroke);
+      margin: 14px 0;
+    }
+    .cta{
+      width:100%;
+      border:none;
+      border-radius: 14px;
+      padding: 14px 14px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor:pointer;
+      background: var(--btn);
+      color: var(--btnText);
+    }
+    .cta:disabled{
+      background: var(--btnDisabled);
+      color: rgba(255,255,255,.55);
+      cursor:not-allowed;
+      font-weight: 700;
+    }
+    .small{
+      margin-top:10px;
+      font-size:11px;
+      color: rgba(255,255,255,.55);
+      line-height:1.45;
+    }
+    .text-input{
+      margin-top:10px;
+      width:100%;
+      padding:12px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color:#fff;
+      font-size:14px;
+      outline:none;
+    }
+    .error{
+      margin-top:8px;
+      font-size:12px;
+      color: var(--danger);
+      min-height: 16px;
+    }
+  </style>
+
+	<!-- Meta Pixel Code -->
+	<script>
+	!function(f,b,e,v,n,t,s)
+	{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+	n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+	if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+	n.queue=[];t=b.createElement(e);t.async=!0;
+	t.src=v;s=b.getElementsByTagName(e)[0];
+	s.parentNode.insertBefore(t,s)}(window, document,'script',
+	'https://connect.facebook.net/en_US/fbevents.js');
+	fbq('init', '1222858113356894');
+	fbq('track', 'PageView');
+	</script>
+	<noscript><img height="1" width="1" style="display:none"
+	src="https://www.facebook.com/tr?id=1222858113356894&ev=PageView&noscript=1"
+	/></noscript>
+	<!-- End Meta Pixel Code -->
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>전화번호를 입력해주세요</h1>
+      <p>입력하시면 자동으로 000-0000-0000 형식으로 맞춰집니다.</p>
+
+      <form id="qForm" class="options">
+        <label class="opt" style="cursor:default;">
+          <div style="width:100%;">
+            <strong>휴대폰 번호</strong>
+            <span>예: 01012345678 또는 010-1234-5678</span>
+            <input
+              id="phoneText"
+              class="text-input"
+              type="tel"
+              inputmode="numeric"
+              autocomplete="tel"
+              placeholder="010-0000-0000"
+              maxlength="13"
+            />
+            <div id="phoneErr" class="error"></div>
+          </div>
+        </label>
+      </form>
+
+      <div class="divider"></div>
+
+      <button id="goNaver" class="cta" disabled>특별이벤트 예약하러 가기 (5/6)</button>
+      <div class="small">
+        * 전화번호는 형식 검증 후에만 다음 단계로 진행됩니다.
+      </div>
+    </div>
+  </div>
+
+<script type="module">
+  import { db } from "../firebase-init.js";
+  import { doc, setDoc, updateDoc, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+  const NEXT_URL = "./backlanding1-end.html";
+  const STEP_NUM = 5;
+  const PIXEL_EVENT = "5st_BookClick"; // 기존 이벤트명 유지(원하면 바꾸세요)
+
+  const btn = document.getElementById("goNaver");
+  const input = document.getElementById("phoneText");
+  const errEl = document.getElementById("phoneErr");
+
+function getOrCreateSid(){
+  // ✅ 권장: 30분 지나면 새 sid
+  const TTL_MS = 30 * 60 * 1000; // 테스트용으로는 10*1000 같이 줄여도 됨
+  const now = Date.now();
+
+  const p = new URLSearchParams(location.search);
+  const sidParam = p.get("sid");
+
+  const savedSid = localStorage.getItem("bookSid");
+  const savedAt = Number(localStorage.getItem("bookSidAt") || 0);
+
+  const fresh = !!(savedSid && savedAt && (now - savedAt) < TTL_MS);
+
+  // 1) 같은 흐름(페이지 이동 중)으로 넘어온 sid면 그대로 유지 + 시간 연장
+  if (sidParam && sidParam === savedSid && fresh) {
+    localStorage.setItem("bookSidAt", String(now));
+    return savedSid;
+  }
+
+  // 2) 저장된 sid가 아직 신선하면(30분 이내) 유지 + 시간 연장(슬라이딩)
+  if (fresh && savedSid) {
+    localStorage.setItem("bookSidAt", String(now));
+    return savedSid;
+  }
+
+  // 3) 만료됐으면 새로 발급
+  const sid = (crypto.randomUUID ? crypto.randomUUID() : String(now) + Math.random().toString(16).slice(2));
+  localStorage.setItem("bookSid", sid);
+  localStorage.setItem("bookSidAt", String(now));
+  return sid;
+}
+
+
+  function buildNextUrl(url, sid){
+    const u = new URL(url, location.href);
+    const cur = new URLSearchParams(location.search);
+    for (const [k,v] of cur.entries()) {
+      if (k === "sid") continue;
+      if (!u.searchParams.has(k)) u.searchParams.set(k, v);
+    }
+    u.searchParams.set("sid", sid);
+    return u.toString();
+  }
+
+  function digitsOnly(v){ return (v || "").replace(/\D/g, ""); }
+
+  function formatPhone(digits){
+    digits = digits.slice(0, 11);
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 7) return digits.slice(0,3) + "-" + digits.slice(3);
+    return digits.slice(0,3) + "-" + digits.slice(3,7) + "-" + digits.slice(7);
+  }
+
+  function validatePhoneDigits(d){
+    if (d.length === 0) return { ok:false, msg:"전화번호를 입력해주세요." };
+    if (d.length < 11) return { ok:false, msg:"휴대폰 번호 11자리를 입력해주세요. (예: 01012345678)" };
+    if (d.length > 11) return { ok:false, msg:"숫자가 너무 깁니다. 11자리만 입력해주세요." };
+    if (!/^0\d{10}$/.test(d)) return { ok:false, msg:"전화번호 형식이 올바르지 않습니다." };
+    return { ok:true, msg:"" };
+  }
+
+  function setError(msg){
+    errEl.textContent = msg || "";
+    input.style.borderColor = msg ? "rgba(255,90,90,.65)" : "rgba(255,255,255,.12)";
+  }
+
+  function refreshUI(){
+    const d = digitsOnly(input.value);
+    const formatted = formatPhone(d);
+    if (input.value !== formatted) input.value = formatted;
+
+    const v = validatePhoneDigits(d);
+    setError(v.msg);
+    btn.disabled = !v.ok;
+
+    input.dataset.raw = d;
+    return v.ok;
+  }
+
+  async function upsertPhone(sid, formatted, raw){
+	const COL = location.hostname.replace(/[^a-zA-Z0-9_-]/g, "_"); // 예: naver_com
+	const ref = doc(db, COL, sid);
+
+    try {
+      await updateDoc(ref, {
+        sid,
+        step: STEP_NUM,
+        updatedAt: serverTimestamp(),
+        "answers.q5_phone": formatted,
+        "answers.q5_phone_raw": raw,
+        lastPage: "backlanding1-5"
+      });
+    } catch (e) {
+      await setDoc(ref, {
+        sid,
+        startedAt: serverTimestamp(),
+        step: STEP_NUM,
+        updatedAt: serverTimestamp(),
+        answers: {
+          q5_phone: formatted,
+          q5_phone_raw: raw
+        },
+        lastPage: "backlanding1-5"
+      }, { merge: true });
+    }
+  }
+
+  input.addEventListener("input", refreshUI);
+  input.addEventListener("blur", refreshUI);
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (!btn.disabled) btn.click();
+    }
+  });
+
+  btn.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    const ok = refreshUI();
+    if (!ok) return;
+
+    const raw = input.dataset.raw;          // 01012345678
+    const formatted = formatPhone(raw);     // 010-1234-5678
+    const sid = getOrCreateSid();
+
+    // Meta Pixel
+    if (typeof fbq === "function") {
+      fbq("trackCustom", PIXEL_EVENT, {
+        phone: formatted,
+        phone_raw: raw,
+        step: String(STEP_NUM),
+        sid,
+        area: formatted // 기존 파라미터명 유지
+      });
+    }
+
+    // Firestore 저장(실패해도 이동은 진행)
+    try {
+      await upsertPhone(sid, formatted, raw);
+    } catch (err) {
+      console.error("Firestore save failed:", err);
+    }
+
+    window.location.href = buildNextUrl(NEXT_URL, sid);
+  });
+
+  refreshUI();
+</script>
+
+  
+</body>
+</html>
